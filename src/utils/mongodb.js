@@ -1,12 +1,12 @@
-import { MongoClient } from "mongodb";
+import { MongoClient } from 'mongodb';
 
-//npm install mongodb
+// npm install mongodb
 
 const uri = process.env.MONGODB_URI;
 const dbName = process.env.MONGODB_DB;
 
-const cachedDb;
-const cachedClient;
+let cachedDb;
+let cachedClient;
 
 if (!uri) {
   throw new Error(
@@ -28,7 +28,7 @@ export async function connectToDataBase() {
   const client = await MongoClient.connect(uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-  })
+  });
 
   const db = await client.db(dbName);
 

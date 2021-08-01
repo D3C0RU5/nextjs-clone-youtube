@@ -22,12 +22,12 @@ const upload = multer({
     acl: 'public-read',
     contentType: multerS3.AUTO_CONTENT_TYPE,
     metadata(req, file, cb) {
-      cb(null, { fieldName: file.fieldName });
+      cb(null, { fieldName: file.fieldname });
     },
     key(req, file, cb) {
       crypto.randomBytes(16, (err, hash) => {
         if (err) cb(err);
-
+        console.log('1');
         const fileName = `${hash.toString('hex')}-${file.originalname}`;
 
         cb(null, fileName);
