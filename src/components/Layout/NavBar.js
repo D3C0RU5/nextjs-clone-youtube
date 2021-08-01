@@ -129,7 +129,7 @@ function NavBar() {
             color="secondary"
             startIcon={<AccountCircle />}
           >
-            Fazer login
+            Fazer logins
           </Button>
         </Box>
       </Box>
