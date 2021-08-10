@@ -21,6 +21,8 @@ import Whatshot from '@material-ui/icons/Whatshot';
 import VideoLibrary from '@material-ui/icons/VideoLibrary';
 import History from '@material-ui/icons/History';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import { useState } from 'react';
+import { useSession } from 'next-auth/client';
 
 const useStyles = makeStyles((theme) => ({
   mobileDrawer: {
@@ -66,6 +68,18 @@ const secondaryManu = [
 function NavBar() {
   const classes = useStyles();
   const router = useRouter();
+  const [session] = useSession();
+  const [subscriptions, setSubscriptions] = useState([
+    { id: 1, name: 'Canal 1' },
+    { id: 2, name: 'Canal 2' },
+    { id: 3, name: 'Canal 3' },
+    { id: 4, name: 'Canal 4' },
+    { id: 5, name: 'Canal 5' },
+    { id: 6, name: 'Canal 6' },
+    { id: 7, name: 'Canal 7' },
+    { id: 8, name: 'Canal 8' },
+    { id: 9, name: 'Canal 9' },
+  ]);
 
   const isSelected = (item) => router.pathname === item.path;
 
@@ -119,20 +133,49 @@ function NavBar() {
         })}
       </List>
       <Divider />
-      <Box mx={4} my={2}>
-        <Typography variant="body2">
-          Faça login para curtir vídeos, comentar e se inscrever.
-        </Typography>
-        <Box mt={2}>
-          <Button
-            variant="outlined"
-            color="secondary"
-            startIcon={<AccountCircle />}
-          >
-            Fazer logins
-          </Button>
+      {!session ? (
+        <Box mx={4} my={2}>
+          <Typography variant="body2">
+            Faça login para curtir vídeos, comentar e se inscrever.
+          </Typography>
+          <Box mt={2}>
+            <Button
+              variant="outlined"
+              color="secondary"
+              startIcon={<AccountCircle />}
+            >
+              Fazer logins
+            </Button>
+          </Box>
         </Box>
-      </Box>
+      ) : (
+        <List
+          subheader={
+            <ListSubheader component="div" id="nested-list-subheader">
+              INSCRIÇÕES
+            </ListSubheader>
+          }
+        >
+          {subscriptions.map((item) => (
+            <ListItem
+              key={item.id}
+              button
+              classes={{ root: classes.listItem }}
+              selected={isSelected(item)}
+            >
+              <ListItemIcon>
+                <Avatar className={classes.avatar}>H</Avatar>
+              </ListItemIcon>
+              <ListItemText
+                classes={{
+                  primary: classes.listItemText,
+                }}
+                primary={item.name}
+              />
+            </ListItem>
+          ))}
+        </List>
+      )}
     </Box>
   );
   return (

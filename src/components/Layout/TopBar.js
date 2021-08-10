@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core';
+import { Avatar, makeStyles } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Box from '@material-ui/core/Box';
@@ -11,6 +11,8 @@ import Hidden from '@material-ui/core/Hidden';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import { AccountCircle, Apps, MoreVert, VideoCall } from '@material-ui/icons';
+
+import { signIn, signOut, useSession } from 'next-auth/client';
 
 // menuIcon -> npm install @material-ui/icons
 
@@ -44,6 +46,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function TopBar() {
+  const [session] = useSession();
   const classes = useStyles();
   return (
     <AppBar className={classes.root} color="default">
@@ -80,14 +83,26 @@ function TopBar() {
           <IconButton className={classes.icons}>
             <MoreVert />
           </IconButton>
-          <Button
-            color="secondary"
-            component="a"
-            variant="outlined"
-            startIcon={<AccountCircle />}
-          >
-            Fazer login
-          </Button>
+          {!session ? (
+            <Button
+              color="secondary"
+              component="a"
+              variant="outlined"
+              startIcon={<AccountCircle />}
+              onClick={() => signIn('Auth0')}
+            >
+              Fazer login
+            </Button>
+          ) : (
+            <Box display="flex" alignItems="center">
+              <Avatar
+                onClick={() => signOut()}
+                alt="User"
+                className={classes.avatar}
+                src={session?.user?.image}
+              />
+            </Box>
+          )}
         </Box>
       </Toolbar>
     </AppBar>
